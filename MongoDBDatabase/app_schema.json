@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Network Device Inventory App Schemas",
+  "type": "object",
+  "properties": {
+    "Device": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "ip_address", "mac_address", "location", "device_type"],
+      "properties": {
+        "_id": { "type": "string", "description": "MongoDB ObjectId (as string in API)" },
+        "name": { "type": "string", "minLength": 1, "description": "Device name" },
+        "ip_address": {
+          "type": "string",
+          "description": "IPv4 address",
+          "pattern": "^(?:(?:25[0-5]|2[0-4]\\d|1?\\d?\\d)\\.){3}(?:25[0-5]|2[0-4]\\d|1?\\d?\\d)$"
+        },
+        "mac_address": {
+          "type": "string",
+          "description": "MAC address (colon-separated)",
+          "pattern": "^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$"
+        },
+        "location": { "type": "string", "minLength": 1, "description": "Physical or logical location" },
+        "device_type": {
+          "type": "string",
+          "description": "Type of device",
+          "enum": ["router", "switch", "server", "firewall", "other"]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO-8601 timestamp when the device was created"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO-8601 timestamp when the device was last updated"
+        }
+      }
+    },
+    "Log": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["device_id", "action", "timestamp"],
+      "properties": {
+        "_id": { "type": "string", "description": "MongoDB ObjectId (as string in API)" },
+        "device_id": { "type": "string", "description": "Reference to Device _id" },
+        "action": { "type": "string", "minLength": 1, "description": "Action performed" },
+        "details": { "type": "string", "description": "Additional details", "minLength": 0 },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO-8601 timestamp for the log entry"
+        }
+      }
+    }
+  },
+  "required": ["Device", "Log"]
+}
