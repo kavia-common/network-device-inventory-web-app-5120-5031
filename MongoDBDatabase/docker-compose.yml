@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  mongodb:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: network-device-inventory-mongodb:local
+    container_name: network-device-inventory-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      # Do not require credentials by default for preview; users can set these if needed.
+      # MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      # MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      # MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      # Optional app-specific vars consumed by backend (documented in README)
+      # MONGODB_URI: ${MONGODB_URI}
+      # MONGODB_DB: ${MONGODB_DB}
+      # MONGODB_COLLECTION: ${MONGODB_COLLECTION}
+      TZ: UTC
+    volumes:
+      - mongo_data:/data/db
+    command: ["mongod", "--bind_ip_all"]
+    # No working_dir, no cd into any subdirectory. Clean startup.
+
+volumes:
+  mongo_data:
+    driver: local
